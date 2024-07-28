@@ -1,0 +1,7 @@
+.idea
+
+.venv
+
+web_app/temp_data/*
+file_storage/data/*
+.env

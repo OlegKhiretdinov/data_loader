@@ -1,0 +1,8 @@
+{% extends "layouts/main.html" %}
+
+{% block main_content %}
+    <form enctype="multipart/form-data" action="{{ url_for('download')}}" method="post">
+        <input placeholder="http://site.ru/file.csv" type="text" name="url">
+        <button type="submit">Загрузить</button>
+    </form>
+{% endblock %}
