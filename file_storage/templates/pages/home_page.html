@@ -1,0 +1,15 @@
+{% extends "layouts/main.html" %}
+
+{% block main_content %}
+    <table>
+        <tbody>
+            {%for item in files%}
+            <tr>
+                <td>
+                    {{item}}
+                </td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+{% endblock %}

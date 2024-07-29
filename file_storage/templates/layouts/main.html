@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link type="text/css" href="{{ url_for('static', filename='styles/styles.css')}}" rel="stylesheet" />
+    {% block title %}
+        <title>Список файлов</title>
+    {% endblock %}
+</head>
+<body>
+    <div class="wrapper">
+        <header class="header">
+            {% block header %}
+                <h1>Список файлов</h1>
+            {% endblock %}
+        </header>
+        <main class="main">
+            {% block main_content %}{% endblock %}
+        </main>
+        <footer class="footer">
+            <a href="https://github.com/OlegKhiretdinov" target="_blank">github</a>
+        </footer>
+    </div>
+</body>
+</html>

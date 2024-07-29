@@ -1,5 +1,5 @@
 .idea
-
+__pycache__
 .venv
 
 web_app/temp_data/*
