@@ -1,6 +1,7 @@
-from flask import Flask, send_from_directory, request, render_template
 import os
+from re import match
 
+from flask import Flask, send_from_directory, request, render_template
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'data/'
@@ -12,7 +13,7 @@ def home():
         os.path.dirname(os.path.abspath(__file__)),
         app.config['UPLOAD_FOLDER']
     )
-    files = os.listdir(upload_folder_path)
+    files = filter(lambda item: not bool(match(r'^\.', item)), os.listdir(upload_folder_path))
     base_url = request.base_url
     files_url = map(lambda file: f'{base_url}download/{file}', files)
     return render_template('/pages/home_page.html', files=files_url)
