@@ -76,6 +76,9 @@ def get_csv_columns_type(path, sep=';', has_header=None):
                 break
 
             # Отбираем наиболее встречающийся тип данных
-            columns_type = list(map(lambda types: Counter(types).most_common(1)[0][0], columns_type_collection))
+            columns_type = list(map(
+                lambda types: Counter(types).most_common(1)[0][0],
+                columns_type_collection
+            ))
 
     return list(zip(columns_name, columns_type))

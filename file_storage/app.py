@@ -1,6 +1,6 @@
 from flask import Flask, send_from_directory, request, render_template
 import os
-from urllib.parse import urljoin
+
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'data/'
