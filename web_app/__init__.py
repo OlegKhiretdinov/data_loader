@@ -1,4 +1,5 @@
 import logging.config
+from web_app.app import app
 
 log_config = {
     "version": 1,
@@ -33,3 +34,7 @@ log_config = {
 }
 
 logging.config.dictConfig(log_config)
+
+__all__ = (
+    'app'
+)
