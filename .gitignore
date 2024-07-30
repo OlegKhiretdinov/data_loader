@@ -4,5 +4,6 @@ __pycache__
 
 web_app/temp_data/*
 file_storage/data/*
+!.gitkeep
 .env
 *.log
