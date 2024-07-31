@@ -25,7 +25,7 @@ class ConnectionPool:
             logging.warning('Подключение к базе данных')
             self.__conn_pool = pool.SimpleConnectionPool(
                 1,
-                1,
+                100,
                 **connection_params
             )
         except OperationalError:
