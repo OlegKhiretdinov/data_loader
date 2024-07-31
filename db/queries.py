@@ -32,6 +32,9 @@ def upload_from_csv_query(csv_file_data, file_path, table_name=None):
     create_table_query_str = create_table_query_builder(csv_file_data["columns"], table_name)
     insert_data_query_str = insert_data_query_builder(csv_file_data["columns"], table_name)
 
+    if not connections.is_connected:
+        return False, 'Не удалось подключитьяс к базе данных'
+
     with connections.getconn() as conn:
         with conn.cursor() as cursor:
             logging.warning(f'создание таблицы {table_name}')
@@ -58,6 +61,6 @@ def upload_from_csv_query(csv_file_data, file_path, table_name=None):
                 logging.error(f'ошибка при открытии файла {file_path}')
                 return False, f'не удалось добавить данные в таблицу {table_name}'
 
-    connections.putconn(conn)
     logging.warning(f'таблица {table_name} создана')
+    connections.putconn(conn)
     return True, f'Данные загружены в таблицу {table_name}'
