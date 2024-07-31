@@ -35,20 +35,55 @@ def sanitize_column_name(name):
     return new_name
 
 
-def get_csv_columns_type(path, sep=';', has_header=None):
+def get_csv_delimiter(file):
+    """
+    определяеи разделитель в csv файле
+    :param file: файл
+    :return: разделитель
+    """
+    line_length = len(file.readline())
+    file.seek(0)
+    sep = csv.Sniffer().sniff(file.read(line_length * 100)).delimiter
+    file.seek(0)
+    return sep
+
+
+def csv_header_checker(file):
+    """
+    определяем есть ли заголовок
+    :param file: файл
+    :return: True | False
+    """
+    line_length = len(file.readline())
+    file.seek(0)
+    has_header = csv.Sniffer().has_header(file.read(line_length * 3))
+    file.seek(0)
+    return has_header
+
+
+def csv_file_params(path, sep=None, has_header=None):
+    """
+    определяет параметры колонок, наличие заголовка и разделитель
+    :param path: путь к csv файлу
+    :param sep: разделитель
+    :param has_header: флаг указывающий есть ли в таблице заголовок
+    :return: объект с параметрами csv файла. типы колонок представлены списком кортежей (название колонки, тип колонки)
+    """
     columns_name = []
     columns_type_collection = []
 
-    logging.info(f'открывается файл {path}')
+    logging.info(f'открываем файл {path}')
     with open(path) as file:
         if has_header is None:
-            logging.info(f'определяем есть ли в файле {path} заголовок')
-            line_length = len(file.readline())
-            file.seek(0)
-            has_header = csv.Sniffer().has_header(file.read(line_length * 3))
-            file.seek(0)
+            logging.info(f'определяем есть ли заголовок в файле {path}')
+            has_header = csv_header_checker(file)
+
+        if sep is None:
+            logging.info(f'определяем разделитель в файле {path}')
+            sep = get_csv_delimiter(file)
 
         csv_file = csv.reader(file, delimiter=sep)
+        logging.info(f'определяем типы данных в файле {path}')
         for row in csv_file:
             if csv_file.line_num == 1:
                 # добавляем заголовки в список параметров таблицы
@@ -64,7 +99,6 @@ def get_csv_columns_type(path, sep=';', has_header=None):
                     for i in range(1, len(row) + 1):
                         columns_name.append(f'column_{i}')
 
-            logging.info(f'определяем типы данных в файле {path}')
             for index, value in enumerate(row):
                 while len(columns_type_collection) <= index:
                     columns_type_collection.append([])
@@ -81,4 +115,8 @@ def get_csv_columns_type(path, sep=';', has_header=None):
                 columns_type_collection
             ))
 
-    return list(zip(columns_name, columns_type))
+    return {
+        'columns': list(zip(columns_name, columns_type)),
+        "has_header": has_header,
+        "sep": sep
+    }

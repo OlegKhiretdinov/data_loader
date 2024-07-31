@@ -4,9 +4,9 @@ from urllib.parse import urlparse
 
 from flask import Flask, request, render_template
 
-from db.queries import create_table_query
+from db.queries import upload_from_csv_query
 from utils.loader import loader
-from utils.parser import get_csv_columns_type
+from utils.parser import csv_file_params
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'temp_data/'
@@ -23,7 +23,7 @@ def home():
 
 @app.post('/download')
 def download():
-    url = request.form.get('url')
+    url = request.form.get('url').strip()
     parsed_url = urlparse(url)
     if not all([parsed_url.scheme, parsed_url.path]):
         logging.info(f'не валидный url {url}')
@@ -32,8 +32,8 @@ def download():
     status, data = loader(url, temp_storage_path)
 
     if status == 200:
-        columns_type = get_csv_columns_type(data)
-        create_table_query(columns_type, data)
-        return "Данные Загружены"
+        csv_params = csv_file_params(data)
+        is_upload, message = upload_from_csv_query(csv_params, data)
+        return message
     else:
         return f'Не удалось загрузить данные. {data}'
