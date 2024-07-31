@@ -2,7 +2,7 @@ import logging
 import os
 from urllib.parse import urlparse
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, url_for, redirect
 
 from db.queries import upload_from_csv_query
 from utils.loader import loader
@@ -27,7 +27,7 @@ def download():
     parsed_url = urlparse(url)
     if not all([parsed_url.scheme, parsed_url.path]):
         logging.info(f'не валидный url {url}')
-        return render_template('pages/home_page.html')
+        return redirect(url_for('home'))
 
     status, data = loader(url, temp_storage_path)
 
