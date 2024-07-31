@@ -2,8 +2,8 @@
 
 set -m
 
-app/.venv/bin/python3 -m flask --app app/web_app:app run --port=5000 --host=0.0.0.0 &
+.venv/bin/python3 -m gunicorn -w 5 -b 0.0.0.0:5000 web_app:app &
 
-app/.venv/bin/python3 -m flask --app app/file_storage:app run --port=5001 --host=0.0.0.0
+.venv/bin/python3 -m gunicorn -w 5 -b 0.0.0.0:5001 file_storage:app
 
 fg %1

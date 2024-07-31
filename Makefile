@@ -1,8 +1,11 @@
 storage:
-	poetry run flask --app file_storage.app run --port 5001
+	poetry run gunicorn -w 5 -b 0.0.0.0:5001 file_storage:app
 
-start_app:
+dev_app:
 	poetry run flask --app web_app.app run --debug
 
 lint:
-	 flake8 web_app utils file_storage
+	poetry run flake8 web_app utils file_storage db
+
+start_app:
+	poetry run gunicorn -w 5 -b 0.0.0.0:5000 web_app:app
