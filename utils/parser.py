@@ -110,11 +110,11 @@ def csv_file_params(path, sep=None, has_header=None):
             if csv_file.line_num == 10 + int(has_header):
                 break
 
-            # Отбираем наиболее встречающийся тип данных
-            columns_type = list(map(
-                lambda types: Counter(types).most_common(1)[0][0],
-                columns_type_collection
-            ))
+        # Отбираем наиболее встречающийся тип данных
+        columns_type = list(map(
+            lambda types: Counter(types).most_common(1)[0][0],
+            columns_type_collection
+        ))
 
     return {
         'columns': list(zip(columns_name, columns_type)),
