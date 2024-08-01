@@ -48,12 +48,17 @@ def upload_from_csv_query(csv_file_data, file_path, table_name=None):
                 with open(file_path) as file:
                     if csv_file_data["has_header"]:
                         next(file)
+
                     logging.warning(f'добавление данных в таблицу {table_name}')
-                    for row in file:
-                        cursor.execute(
-                            insert_data_query_str,
-                            row.strip().split(csv_file_data["sep"])
-                        )
+                    try:
+                        for row in file:
+                            cursor.execute(
+                                insert_data_query_str,
+                                row.strip().split(csv_file_data["sep"])
+                            )
+                    except IndexError:
+                        logging.error(f'ошибка в файле {file_path}')
+                        return False, 'ошибка в файле'
             except psycopg2.Error:
                 logging.error(f'не удалось добавить данные в таблицу {table_name}')
                 return False, f'не удалось добавить данные в таблицу {table_name}'
