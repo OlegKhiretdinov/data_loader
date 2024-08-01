@@ -1,10 +1,10 @@
+import logging
 import os
+import time
 
 import psycopg2
 from dotenv import load_dotenv
 from psycopg2 import pool, OperationalError
-import logging
-
 
 load_dotenv()
 
@@ -17,20 +17,25 @@ connection_params = {
 }
 
 
+def connect():
+    try:
+        logging.warning('Подключение к базе данных')
+        return pool.SimpleConnectionPool(
+            1,
+            10,
+            **connection_params
+        )
+    except OperationalError:
+        logging.error('Не удалось подключиться к базе данных')
+        time.sleep(5)
+        return connect()
+
+
 class ConnectionPool:
     __temp_conn = set()
 
     def __init__(self):
-        try:
-            logging.warning('Подключение к базе данных')
-            self.__conn_pool = pool.SimpleConnectionPool(
-                1,
-                100,
-                **connection_params
-            )
-        except OperationalError:
-            logging.error('Не удалось подключиться к базе данных')
-            self.__conn_pool = None
+        self.__conn_pool = connect()
 
     @property
     def is_connected(self):
